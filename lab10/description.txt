@@ -1,0 +1,43 @@
+Lab 10 – The Sprinkler Problem
+Description
+
+The project is composed from 6 modules, as following:
+- TriangularRegion and TrapezoidalRegion represent the regions of temperature(very cold, cold, normal, warm, hot) and humidity(dry, normal, wet) as presented in Fig1 and Fig2, with their specific parameters which are used to calculate the value of µ function for temperature and humidity in every rule.
+- Rule contains all the information needed for a certain rule ( temperature + humidity => one of {short, medium, long}), including the result fuzzy set for each rule, modified (if needed) after every rule computation.
+- The Problem module is used to initialize all the problem’s data, reading from temperature.in; humidity.in; and rules.in.
+- The concrete algorithm is in Controller module, namely the function solveFuzzy(). Let T be temperature and H humidity. We use Mamdani approach, so the out of each rule is a fuzzy set, which is derived from µ function of temperature and humidity. These output fuzzy sets are combined into a single fuzzy set in the end. We take every rule (each tuple of {temperature, humidity})  and compute the corresponding µ(T) and µ(H), according to their regions (triangular or trapezoidal), and the result fuzzy set is the area on the graph under the minimum of µ(T) and µ(H). We repeat this for every rule, and in the end we defuzzify our results, determining the center of gravity. We sum all the points for which the time in defined in our graph(0-100) multiplied by the value obtained after computing the rules for that region. If the point does not reach that value when intersecting the graph, it is multiplied by the its maximum reached value. To get the final result, we divide this sum by the sum of the values with which we multiplied the points. 
+
+Case 1. Temperature = 20 and Humidity = 60:
+	R4. warm + wet => short 
+		µ(T = 20) = max{0, min{(20 – 15) / (20 – 15), 1, (25 – 20) / (25 – 20)}} = max{0, min{1, 1, 1}} = max{0, 1} = 1.
+		µ(H = 60) = max{0, min{(60-50)/(100-50), 1, ?}} = max{0, min{0.2, 1, infinity}} = max{0, 0.2} = 0.2
+	The fuzzy set is determined by the area from the graph below value min{µ(T), µ(H)} = 0.2
+	R9. warm + normal => medium
+		µ(T = 20) = 1
+		µ(H = 60) = max{0, min{6/5, 1, 4/5}} = max{0, 4/5} = 4/5 = 0.8
+	The fuzzy set is determined by the value 0.8
+	R10. hot + normal => long
+		µ(T = 20) = max{0, min{-1, 1, infinity}} = 0
+		µ(H = 60) = 0.8
+	The fuzzy set is determined by the area from the graph below value 0
+All R1, R2, …, R15 have the result fuzzy set determined by 0, except R9 and R10.
+After computing the COA, we obtain time = 98.49
+
+Case 2. Temperature = -33 and Humidity = 5:
+	R1. very cold + wet => short
+		µ(T = 33) = 0
+		µ(H = 5) = 0
+	The fuzzy set is determined by the area from the graph below value 0
+	R7. cold + normal => medium 
+		µ(T = 33) = 0
+		µ(H = 5) = 0
+	The fuzzy set is determined by the area from the graph below value 0
+	R15. hot + dry => long
+		µ(T = 33) = max{0, min{1.6, 1, infinity}} = 1
+		µ(H = 5) = max{0, min{infinity, 1, 0.9}} = 0.9 
+	The fuzzy set is determined by the area from the graph below value 0.9
+All R1, R2, …, R15 have the result fuzzy set determined by 0, except R15 and R10(hot + normal => long) which is 0.1 .
+After computing the COA, we obtain time = 83.48
+
+
+
